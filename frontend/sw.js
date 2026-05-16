@@ -1,16 +1,20 @@
-const CACHE_NAME = 'npc-mode-v1';
+const CACHE_NAME = 'daily-life-v2';
 const STATIC_ASSETS = [
-  '/frontend/index.html',
-  '/frontend/input.html',
-  '/frontend/style.css',
-  '/frontend/app.js',
-  '/frontend/input.js',
-  '/frontend/manifest.json',
+  '/',
+  '/index.html',
+  '/history.html',
+  '/style.css',
+  '/app.js',
+  '/history.js',
+  '/manifest.json',
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+    caches.open(CACHE_NAME).then((cache) =>
+      // addAll 只快取確定存在的檔案；用 add 逐一加，失敗不影響其他檔案
+      Promise.allSettled(STATIC_ASSETS.map(url => cache.add(url)))
+    )
   );
   self.skipWaiting();
 });
@@ -25,10 +29,8 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // 只快取前端靜態資源；API 請求直接走網路
-  if (event.request.url.includes('/api/')) {
-    return;
-  }
+  // API 請求直接走網路，不走快取
+  if (event.request.url.includes('/api/')) return;
 
   event.respondWith(
     caches.match(event.request).then((cached) => cached || fetch(event.request))
