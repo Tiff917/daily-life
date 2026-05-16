@@ -1,0 +1,10 @@
+{
+  "name": "daily-life",
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "node backend/server.js",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}

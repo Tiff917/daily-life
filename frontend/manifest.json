@@ -1,0 +1,26 @@
+{
+  "name": "Daily NPC Mode",
+  "short_name": "NPC Mode",
+  "description": "個人日常管理儀表板 — 花費、任務、靈感",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F5F1ED",
+  "theme_color": "#C4956A",
+  "orientation": "portrait",
+  "lang": "zh-TW",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

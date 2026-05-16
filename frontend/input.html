@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#F5F1ED" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>快速輸入 — Daily NPC Mode</title>
+  <meta name="description" content="一鍵記錄花費、任務、靈感" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+    }
+
+    /* ── Header ─────────────────────────────── */
+    .input-header {
+      padding: 56px 24px 16px;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 6px 0;
+      margin-bottom: 20px;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover { color: var(--accent); }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .page-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Type hints ─────────────────────────── */
+    .hint-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .hint-chip {
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .hint-chip:hover {
+      border-color: var(--accent-light);
+      color: var(--accent-dark);
+    }
+
+    /* ── Input area ─────────────────────────── */
+    .input-wrap {
+      flex: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detect-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 28px;
+      margin-bottom: 10px;
+      transition: var(--transition);
+    }
+
+    .detect-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    #bigInput {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      min-height: 140px;
+      max-height: 240px;
+    }
+
+    .submit-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 12px;
+    }
+
+    .char-count {
+      font-size: 0.72rem;
+      color: var(--text-light);
+    }
+
+    #submitBtn {
+      padding: 12px 28px;
+      font-size: 0.95rem;
+    }
+
+    /* ── History ────────────────────────────── */
+    .history-section {
+      max-width: 480px;
+      margin: 24px auto 0;
+      width: 100%;
+      padding: 0 24px;
+      padding-bottom: 100px;
+    }
+
+    .history-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      font-size: 0.85rem;
+    }
+
+    .history-type-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .dot-expense  { background: var(--accent); }
+    .dot-task     { background: var(--matcha); }
+    .dot-inspo    { background: var(--lavender); }
+
+    .history-text {
+      color: var(--text-mid);
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .history-time {
+      font-size: 0.68rem;
+      color: var(--text-light);
+      flex-shrink: 0;
+    }
+
+    /* ── Success animation ──────────────────── */
+    @keyframes popIn {
+      0%   { transform: scale(0.7); opacity: 0; }
+      60%  { transform: scale(1.12); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-flash {
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ── Textarea submit on Enter (hint) ────── */
+    .enter-hint {
+      font-size: 0.68rem;
+      color: var(--text-light);
+      text-align: right;
+      margin-top: 6px;
+    }
+
+    kbd {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      background: var(--bg-card-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+<!-- Header -->
+<header class="input-header fade-up">
+  <a href="index.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    返回
+  </a>
+  <h1 class="page-title">快速輸入</h1>
+  <p class="page-subtitle">直接打字，系統自動分類</p>
+</header>
+
+<!-- Input Area -->
+<div class="input-wrap fade-up">
+
+  <!-- Type detection display -->
+  <div class="detect-strip" id="detectStrip">
+    <span class="detect-label">輸入格式提示 →</span>
+    <span class="badge badge-expense">💰 數字 + 說明 = 花費</span>
+    <span class="badge badge-task"># = 靈感</span>
+  </div>
+
+  <!-- Hint chips -->
+  <div class="hint-row" id="hintRow">
+    <button class="hint-chip" onclick="fillExample('150 午餐')">💰 150 午餐</button>
+    <button class="hint-chip" onclick="fillExample('買牛奶')">✏️ 買牛奶</button>
+    <button class="hint-chip" onclick="fillExample('#今天學到了新技術')"># 今天學到…</button>
+    <button class="hint-chip" onclick="fillExample('完成報告')">✏️ 完成報告</button>
+  </div>
+
+  <!-- The big input -->
+  <textarea
+    id="bigInput"
+    class="input-field"
+    placeholder="輸入 100 晚餐 ← 記花費&#10;輸入 買牛奶 ← 建任務&#10;輸入 #靈感內容 ← 存靈感"
+    aria-label="萬能輸入框"
+    maxlength="500"
+    autofocus
+  ></textarea>
+  <p class="enter-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> 送出</p>
+
+  <div class="submit-row">
+    <span class="char-count" id="charCount">0 / 500</span>
+    <button class="btn btn-primary" id="submitBtn" onclick="submitInput()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+      送出記錄
+    </button>
+  </div>
+</div>
+
+<!-- History -->
+<section class="history-section fade-up">
+  <p class="history-title">本次記錄</p>
+  <div class="history-list" id="historyList">
+    <p style="font-size:0.82rem;color:var(--text-light);text-align:center;padding:16px 0;">
+      還沒有記錄，快來輸入第一筆！
+    </p>
+  </div>
+</section>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav" aria-label="主導覽">
+  <a href="index.html" class="nav-item">
+    <div class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7" rx="2"/>
+        <rect x="14" y="3" width="7" height="7" rx="2"/>
+        <rect x="3" y="14" width="7" height="7" rx="2"/>
+        <rect x="14" y="14" width="7" height="7" rx="2"/>
+      </svg>
+    </div>
+    Dashboard
+  </a>
+  <a href="input.html" class="nav-item active" aria-current="page">
+    <div class="nav-icon" style="background:var(--accent);border-radius:14px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+    </div>
+    新增
+  </a>
+  <a href="input.html" class="nav-item active">
+    <div class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 20h9"/>
+        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+    </div>
+    輸入
+  </a>
+</nav>
+
+<script src="input.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .catch(e => console.warn('SW error:', e));
+    });
+  }
+</script>
+</body>
+</html>

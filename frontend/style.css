@@ -1,0 +1,344 @@
+/* =============================================
+   Daily Life — Design System
+   3-Color Palette: Cream · Caramel · Espresso
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+/* ── 3 Color Families Only ─────────────────── */
+:root {
+  /* 1. CREAM — backgrounds */
+  --cream-100: #FDFAF6;
+  --cream-200: #F5F0E8;
+  --cream-300: #EDE5D8;
+  --cream-400: #DDD3C4;
+
+  /* 2. CARAMEL — accent / interactive */
+  --caramel-300: #D4A879;
+  --caramel-400: #C4956A;
+  --caramel-500: #B8845A;
+  --caramel-600: #9B6E45;
+  --caramel-700: #7A5434;
+
+  /* 3. ESPRESSO — text / dark */
+  --espresso-200: #C4AFA6;
+  --espresso-300: #9C8880;
+  --espresso-400: #7A6560;
+  --espresso-500: #5A4A44;
+  --espresso-600: #3D302A;
+  --espresso-700: #241A16;
+
+  /* Semantic aliases */
+  --bg:           var(--cream-200);
+  --bg-card:      var(--cream-100);
+  --bg-subtle:    var(--cream-300);
+  --border:       var(--cream-400);
+  --accent:       var(--caramel-500);
+  --accent-light: var(--caramel-300);
+  --accent-dark:  var(--caramel-700);
+  --text:         var(--espresso-600);
+  --text-mid:     var(--espresso-400);
+  --text-muted:   var(--espresso-300);
+  --text-faint:   var(--espresso-200);
+
+  /* Spacing & Shape */
+  --r-sm:   10px;
+  --r-md:   16px;
+  --r-lg:   24px;
+  --r-full: 999px;
+
+  /* Typography */
+  --font: 'Inter', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+
+  /* Shadows (caramel-tinted) */
+  --shadow-sm: 0 1px 8px rgba(90, 60, 30, 0.06);
+  --shadow-md: 0 4px 20px rgba(90, 60, 30, 0.10);
+
+  --transition: all 0.2s ease;
+}
+
+/* ── Reset ─────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+/* ── Layout ─────────────────────────────────── */
+.page {
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 0 20px 90px;
+}
+
+/* ── Card ───────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Buttons ─────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  border-radius: var(--r-full);
+  font-family: var(--font);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn-accent {
+  background: var(--accent);
+  color: var(--cream-100);
+  padding: 10px 20px;
+  font-size: 0.875rem;
+}
+.btn-accent:hover  { background: var(--caramel-600); transform: translateY(-1px); }
+.btn-accent:active { transform: translateY(0); }
+
+.btn-icon {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  color: var(--cream-100);
+  border-radius: var(--r-md);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.btn-icon:hover { background: var(--caramel-600); }
+
+/* ── Input ─────────────────────────────────── */
+.input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--cream-100);
+  font-family: var(--font);
+  font-size: 0.925rem;
+  color: var(--text);
+  outline: none;
+  transition: var(--transition);
+}
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184, 132, 90, 0.14);
+}
+.input::placeholder { color: var(--text-faint); }
+
+/* ── Label ─────────────────────────────────── */
+.label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Bottom Nav ─────────────────────────────── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 66px;
+  background: rgba(253, 250, 246, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 8px;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 20px;
+  border-radius: var(--r-md);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: var(--transition);
+}
+.nav-item.active { color: var(--accent); }
+.nav-icon {
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--r-sm);
+  transition: var(--transition);
+}
+.nav-item.active .nav-icon { background: var(--cream-300); }
+
+/* ── Toast ─────────────────────────────────── */
+.toast {
+  position: fixed;
+  top: 18px; left: 50%;
+  transform: translateX(-50%) translateY(-70px);
+  background: var(--espresso-700);
+  color: var(--cream-100);
+  padding: 9px 18px;
+  border-radius: var(--r-full);
+  font-size: 0.82rem;
+  font-weight: 500;
+  z-index: 999;
+  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Calendar Styles ─────────────────────────── */
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.cal-nav-btn {
+  width: 32px; height: 32px;
+  border: none;
+  background: var(--bg-subtle);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  color: var(--text-mid);
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.cal-nav-btn:hover { background: var(--cream-400); color: var(--accent); }
+
+.cal-month-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.cal-dow {
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 4px 0 8px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-mid);
+  position: relative;
+}
+.cal-day:hover { background: var(--cream-300); }
+.cal-day.other-month { color: var(--text-faint); }
+.cal-day.has-tasks::after {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.cal-day.selected {
+  background: var(--accent);
+  color: var(--cream-100);
+  font-weight: 600;
+}
+.cal-day.selected::after { background: var(--cream-100); }
+.cal-day.today:not(.selected) {
+  background: var(--cream-300);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ── Task item ─────────────────────────────── */
+.task-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--cream-300);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.task-row:last-child { border-bottom: none; }
+.task-row:hover .task-text { color: var(--accent); }
+
+.task-check {
+  width: 18px; height: 18px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.task-row.done .task-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.task-row.done .task-text {
+  text-decoration: line-through;
+  color: var(--text-faint);
+}
+
+.task-text {
+  font-size: 0.88rem;
+  color: var(--text);
+  flex: 1;
+  transition: var(--transition);
+}
+
+/* ── Expense pill ────────────────────────────── */
+.expense-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ── Animations ─────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.4s ease both; }
+.fade-up:nth-child(2) { animation-delay: 0.07s; }
+.fade-up:nth-child(3) { animation-delay: 0.14s; }
+.fade-up:nth-child(4) { animation-delay: 0.21s; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--cream-400); border-radius: 4px; }
