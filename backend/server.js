@@ -63,6 +63,17 @@ app.delete('/api/record', async (req, res) => {
   }
 });
 
+// Debug: check env vars presence (never expose values)
+app.get('/debug/env', (_, res) => {
+  res.json({
+    GOOGLE_SHEET_ID:            !!process.env.GOOGLE_SHEET_ID,
+    GOOGLE_SERVICE_ACCOUNT_KEY: !!process.env.GOOGLE_SERVICE_ACCOUNT_KEY,
+    KEY_LENGTH:                 process.env.GOOGLE_SERVICE_ACCOUNT_KEY?.length || 0,
+    KEY_STARTS_WITH:            process.env.GOOGLE_SERVICE_ACCOUNT_KEY?.slice(0, 10) || 'MISSING',
+    NODE_ENV:                   process.env.NODE_ENV || 'not set',
+  });
+});
+
 app.get('/health', (_, res) => res.json({ ok: true }));
 
 app.listen(PORT, () => {
