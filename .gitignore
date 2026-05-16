@@ -4,3 +4,6 @@ backend/.env
 *.log
 .DS_Store
 Thumbs.db
+*google-key*.json
+*service-account*.json
+*.credentials.json
