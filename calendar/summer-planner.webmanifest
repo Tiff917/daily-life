@@ -1,0 +1,25 @@
+{
+  "name": "我的行事簿",
+  "short_name": "行事簿",
+  "description": "極簡待辦與月曆 PWA，可記錄日期、時間點、提醒與完成事項。",
+  "start_url": "./summer-planner.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fbfaf7",
+  "theme_color": "#a9784d",
+  "icons": [
+    {
+      "src": "./planner-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./planner-icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

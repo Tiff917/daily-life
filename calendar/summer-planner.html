@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我的行事簿</title>
+    <meta name="theme-color" content="#a9784d" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="我的行事簿" />
+    <meta name="description" content="極簡待辦與月曆 PWA，可記錄日期、時間點、提醒與完成事項。" />
+    <link rel="manifest" href="./summer-planner.webmanifest" />
+    <link rel="icon" href="./planner-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./planner-icon.svg" />
+    <link rel="stylesheet" href="./summer-planner.css" />
+  </head>
+  <body>
+    <main class="desk">
+      <section class="notebook">
+        <header class="notebook__top">
+          <div>
+            <h2 id="todayLabel">6 月 27 日</h2>
+          </div>
+          <div class="top-actions">
+            <div class="progress-chip">
+              <span>完成率</span>
+              <strong id="completionRate">0%</strong>
+            </div>
+          </div>
+        </header>
+
+        <section class="content-grid">
+          <div class="main-stack">
+            <article class="paper view-panel is-active" data-panel="list">
+              <div class="paper__heading">
+                <div></div>
+                <button class="fab-toggle" id="openTaskForm" type="button" aria-label="新增任務">+</button>
+              </div>
+
+              <div class="paper-lines">
+                <ul class="task-list" id="taskList"></ul>
+              </div>
+
+              <form class="add-form" id="taskForm" hidden>
+                <label>
+                  <span>新增今天想做的事</span>
+                  <input id="taskTitle" name="title" type="text" maxlength="40" placeholder="例如：補走進惡地腳本" required />
+                </label>
+                <div class="form-row form-row--triple">
+                  <label>
+                    <span>時間</span>
+                    <input id="taskTime" name="time" type="time" />
+                  </label>
+                  <label>
+                    <span>日期</span>
+                    <input id="taskDate" name="date" type="date" />
+                  </label>
+                  <label>
+                    <span>備註</span>
+                    <input id="taskDuration" name="duration" type="text" maxlength="20" placeholder="重要提醒" />
+                  </label>
+                </div>
+                <div class="form-actions">
+                  <button class="primary-btn" type="submit">寫進今天清單</button>
+                  <button class="ghost-btn" id="closeTaskForm" type="button">取消</button>
+                </div>
+              </form>
+            </article>
+
+            <article class="paper view-panel" data-panel="calendar">
+              <div class="paper__heading paper__heading--calendar">
+                <div>
+                  <h3 id="calendarLabel">2026 年 6 月</h3>
+                </div>
+                <div class="calendar-controls">
+                  <button class="ghost-btn" id="prevMonth" type="button">上個月</button>
+                  <button class="ghost-btn" id="nextMonth" type="button">下個月</button>
+                </div>
+              </div>
+              <div class="calendar-shell">
+                <div class="calendar-weekdays" id="calendarWeekdays"></div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+              </div>
+              <div class="selected-day-sheet">
+                <div>
+                  <p class="eyebrow">Selected Day</p>
+                  <h4 id="selectedDateLabel">今天的任務</h4>
+                </div>
+                <ul class="selected-day-list" id="selectedDayList"></ul>
+              </div>
+            </article>
+
+            <article class="paper view-panel" data-panel="review">
+              <div class="paper__heading">
+                <div>
+                  <p class="eyebrow">Weekly Review</p>
+                  <h3>週報回顧</h3>
+                </div>
+              </div>
+              <div class="review-grid">
+                <div class="metric-card">
+                  <span>本週完成</span>
+                  <strong id="reviewDoneCount">0</strong>
+                </div>
+                <div class="metric-card">
+                  <span>本週新增</span>
+                  <strong id="reviewAddedCount">0</strong>
+                </div>
+                <div class="metric-card">
+                  <span>完成率</span>
+                  <strong id="reviewRate">0%</strong>
+                </div>
+              </div>
+              <div class="review-sections">
+                <section class="summary-card summary-card--plain">
+                  <p class="eyebrow">Category Rhythm</p>
+                  <h3>這週最常出現的分類</h3>
+                  <ul class="mini-goals" id="categorySummary"></ul>
+                </section>
+                <section class="summary-card summary-card--plain">
+                  <p class="eyebrow">Reflection</p>
+                  <h3>這週完成清單</h3>
+                  <ul class="mini-goals" id="weeklyDoneList"></ul>
+                </section>
+              </div>
+            </article>
+
+            <article class="paper view-panel" data-panel="settings">
+              <div class="paper__heading">
+                <div>
+                  <p class="eyebrow">Settings</p>
+                  <h3>提醒與備份</h3>
+                </div>
+              </div>
+              <div class="settings-grid">
+                <section class="summary-card summary-card--plain">
+                  <p class="eyebrow">Daily Reminder</p>
+                  <h3>每日提醒通知</h3>
+                  <label class="toggle-row">
+                    <span>提醒時間</span>
+                    <input id="reminderTime" type="time" />
+                  </label>
+                  <div class="settings-actions">
+                    <button class="primary-btn" id="enableNotifications" type="button">開啟通知權限</button>
+                    <button class="ghost-btn" id="testNotification" type="button">測試提醒</button>
+                  </div>
+                  <p class="helper-text" id="notificationStatus">尚未啟用通知。</p>
+                </section>
+
+                <section class="summary-card summary-card--plain">
+                  <p class="eyebrow">Backup</p>
+                  <h3>上傳備份 / 下載備份</h3>
+                  <div class="settings-actions">
+                    <button class="primary-btn" id="downloadBackup" type="button">下載備份</button>
+                    <button class="ghost-btn" id="uploadBackupButton" type="button">上傳備份</button>
+                    <input id="uploadBackupInput" type="file" accept="application/json" hidden />
+                  </div>
+                  <p class="helper-text">會把目前所有任務、提醒時間、檢視設定一起存成 JSON。</p>
+                </section>
+              </div>
+            </article>
+          </div>
+
+        </section>
+      </section>
+    </main>
+
+    <nav class="mobile-bottom-nav" aria-label="手機底部導覽">
+      <button class="mobile-nav-btn is-active" data-view="list" type="button">清單</button>
+      <button class="mobile-nav-btn" data-view="calendar" type="button">月曆</button>
+      <button class="mobile-nav-btn" data-view="review" type="button">週報</button>
+      <button class="mobile-nav-btn" data-view="settings" type="button">設定</button>
+    </nav>
+
+    <script src="./summer-planner.js"></script>
+  </body>
+</html>
