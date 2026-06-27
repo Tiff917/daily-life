@@ -37,11 +37,7 @@ const categorySummary = document.querySelector("#categorySummary");
 const weeklyDoneList = document.querySelector("#weeklyDoneList");
 const reminderTime = document.querySelector("#reminderTime");
 const enableNotifications = document.querySelector("#enableNotifications");
-const testNotification = document.querySelector("#testNotification");
 const notificationStatus = document.querySelector("#notificationStatus");
-const downloadBackup = document.querySelector("#downloadBackup");
-const uploadBackupButton = document.querySelector("#uploadBackupButton");
-const uploadBackupInput = document.querySelector("#uploadBackupInput");
 
 function createTaskSeed(title, time, note, date) {
   return {
@@ -439,46 +435,6 @@ function scheduleReminderCheck() {
   }, 30000);
 }
 
-function sendTestNotification() {
-  if (!("Notification" in window) || Notification.permission !== "granted") {
-    notificationStatus.textContent = "要先開啟通知權限，才能測試提醒。";
-    return;
-  }
-  new Notification("我的行事簿", { body: "這是一則測試提醒。" });
-}
-
-function downloadStateBackup() {
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = `planner-backup-${today}.json`;
-  link.click();
-  URL.revokeObjectURL(link.href);
-}
-
-function uploadStateBackup(event) {
-  const [file] = event.target.files || [];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const parsed = JSON.parse(String(reader.result));
-      state = {
-        ...state,
-        ...parsed,
-        tasks: Array.isArray(parsed.tasks) ? parsed.tasks.map(normalizeTask) : state.tasks,
-      };
-      saveState();
-      rerender();
-      syncStatus.textContent = "已匯入備份資料。";
-    } catch {
-      syncStatus.textContent = "備份檔案格式有問題。";
-    }
-  };
-  reader.readAsText(file, "utf-8");
-}
-
 taskForm.addEventListener("submit", addTask);
 openTaskForm.addEventListener("click", showTaskForm);
 closeTaskForm.addEventListener("click", hideTaskForm);
@@ -486,10 +442,6 @@ mobileNavButtons.forEach((button) => button.addEventListener("click", () => swit
 prevMonth.addEventListener("click", () => moveMonth(-1));
 nextMonth.addEventListener("click", () => moveMonth(1));
 enableNotifications.addEventListener("click", requestNotifications);
-testNotification.addEventListener("click", sendTestNotification);
-downloadBackup.addEventListener("click", downloadStateBackup);
-uploadBackupButton.addEventListener("click", () => uploadBackupInput.click());
-uploadBackupInput.addEventListener("change", uploadStateBackup);
 reminderTime.addEventListener("change", (event) => {
   state.reminderTime = event.target.value || "20:30";
   saveState();
